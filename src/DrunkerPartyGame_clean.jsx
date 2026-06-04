@@ -99,7 +99,7 @@ function HomeScreen({ onSelectGame }) {
       emoji: "🕵️",
       title: "WORD IMPOSTER",
       desc: "Everyone shares a secret word — except the Spy. Can the crew sniff them out before time's up?",
-      tag: "4–12 Players",
+      tag: "3–12 Players",
       accent: "var(--neon-blue)",
       available: true,
     },
