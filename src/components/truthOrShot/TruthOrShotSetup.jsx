@@ -28,7 +28,7 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   const [perPerson, setPerPerson] = useState(DEFAULT_PER_PERSON);
   const [autoAdjusted, setAutoAdjusted] = useState(false);
   const [playerSequence, setPlayerSequence] = useState("sequential"); // 'sequential' | 'randomize'
-  const [drinkTrackingMode, setDrinkTrackingMode] = useState("honor"); // 'honor' | 'track'
+  const [drinkTrackingMode, setDrinkTrackingMode] = useState("track"); // 'honor' | 'track'
 
   const handleCountChange = (n) => {
     setCount(n);
@@ -209,11 +209,11 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
           </button>
         </div>
 
-        {progressionMode === "sequential" && (
-          <div className="tos-hint-note">
-            Order follows your selected difficulties, low to high, then Secret as the final stretch.
-          </div>
-        )}
+        <div className="tos-hint-note">
+          {progressionMode === "sequential"
+            ? "Order follows your selected difficulties, low to high, then Secret as the final stretch."
+            : "Questions are pulled randomly from your selected difficulties."}
+        </div>
       </div>
 
       <div className="input-group">
@@ -251,23 +251,30 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
             🔀 Randomize
           </button>
         </div>
+        <div className="tos-hint-note">
+          The player sequence will be{" "}
+          {playerSequence === "sequential" ? "the order you entered names in" : "shuffled randomly each game"}.
+        </div>
       </div>
 
       <div className="input-group">
         <label className="input-label">Drink Tracking Mode</label>
         <div className="tos-option-row">
           <button
-            className={`tos-option-btn ${drinkTrackingMode === "honor" ? "active" : ""}`}
-            onClick={() => setDrinkTrackingMode("honor")}
-          >
-            🤝 Honor System
-          </button>
-          <button
             className={`tos-option-btn ${drinkTrackingMode === "track" ? "active" : ""}`}
             onClick={() => setDrinkTrackingMode("track")}
           >
             📊 Track Mode
           </button>
+          <button
+            className={`tos-option-btn ${drinkTrackingMode === "honor" ? "active" : ""}`}
+            onClick={() => setDrinkTrackingMode("honor")}
+          >
+            🤝 Honor System
+          </button>
+        </div>
+        <div className="tos-hint-note">
+          Honor System won't count drinks; Track Mode logs each player's count for the leaderboard.
         </div>
       </div>
 
