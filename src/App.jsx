@@ -3,8 +3,8 @@ import "./components/shared/shared.css";
 import HomeScreen from "./components/shared/HomeScreen";
 import WordImposterSetup from "./components/wordImposter/WordImposterSetup";
 import WordImposterGame from "./components/wordImposter/WordImposterGame";
-// import TruthOrShotSetup from "./components/truthOrShot/TruthOrShotSetup";
-// import TruthOrShotGame from "./components/truthOrShot/TruthOrShotGame";
+import TruthOrShotSetup from "./components/truthOrShot/TruthOrShotSetup";
+import TruthOrShotGame from "./components/truthOrShot/TruthOrShotGame";
 
 export default function App() {
   const [screen, setScreen] = useState("home"); // home | setup | game
@@ -35,9 +35,9 @@ export default function App() {
       {screen === "setup" && selectedGame === "wordImposter" && (
         <WordImposterSetup onStart={handleStart} onBack={handleBack} />
       )}
-      {/* {screen === "setup" && selectedGame === "truthOrShot" && (
+      {screen === "setup" && selectedGame === "truthOrShot" && (
         <TruthOrShotSetup onStart={handleStart} onBack={handleBack} />
-      )} */}
+      )}
 
       {screen === "game" && selectedGame === "wordImposter" && gameConfig && (
         <WordImposterGame
@@ -48,7 +48,7 @@ export default function App() {
           onRestart={handleRestart}
         />
       )}
-      {/* {screen === "game" && selectedGame === "truthOrShot" && gameConfig && (
+      {screen === "game" && selectedGame === "truthOrShot" && gameConfig && (
         <TruthOrShotGame
           key={gameKey}
           players={gameConfig.players}
@@ -56,7 +56,7 @@ export default function App() {
           onExit={handleExit}
           onRestart={handleRestart}
         />
-      )} */}
+      )}
     </div>
   );
 }
