@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QUESTIONS } from "../../data/truthOrShotQuestions";
 import "./truthOrShot.css";
 
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 10;
 const DEFAULT_COUNT = 5;
-const QUESTION_COUNT_OPTIONS = [5, 10, 15, 20, 25, 30, 40, 50, "All"];
+const DEFAULT_PER_PERSON = 5;
 
 function tiersForProgression(progressionMode, difficulties) {
   const ordered = ["easy", "normal", "brutal"].filter((t) => difficulties.includes(t));
@@ -25,7 +25,8 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   const [difficulties, setDifficulties] = useState(["easy"]); // subset of 'easy' | 'normal' | 'brutal'
   const [showHint, setShowHint] = useState("hide"); // 'show' | 'hide'
   const [progressionMode, setProgressionMode] = useState("randomize"); // 'randomize' | 'sequential'
-  const [questionCount, setQuestionCount] = useState(10);
+  const [perPerson, setPerPerson] = useState(DEFAULT_PER_PERSON);
+  const [autoAdjusted, setAutoAdjusted] = useState(false);
   const [playerSequence, setPlayerSequence] = useState("sequential"); // 'sequential' | 'randomize'
   const [drinkTrackingMode, setDrinkTrackingMode] = useState("honor"); // 'honor' | 'track'
 
@@ -60,9 +61,21 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   for (let i = MIN_PLAYERS; i <= MAX_PLAYERS; i++) countsAvail.push(i);
 
   const maxAvailable = availableCount(progressionMode, difficulties);
-  const requestedCount = questionCount === "All" ? maxAvailable : questionCount;
-  const cappedCount = Math.min(requestedCount, maxAvailable);
-  const isCapped = requestedCount > maxAvailable;
+  const maxPerPerson = Math.max(1, Math.floor(maxAvailable / count));
+
+  useEffect(() => {
+    setPerPerson((p) => {
+      if (p > maxPerPerson) {
+        setAutoAdjusted(true);
+        return maxPerPerson;
+      }
+      setAutoAdjusted(false);
+      return p;
+    });
+  }, [maxPerPerson]);
+
+  const totalQuestions = Math.min(perPerson * count, maxAvailable);
+  const plusDisabled = (perPerson + 1) * count > maxAvailable;
 
   const handleSubmit = () => {
     onStart({
@@ -71,7 +84,7 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
         difficulties,
         showHint: showHint === "show",
         progressionMode,
-        questionCount: cappedCount,
+        questionCount: totalQuestions,
         playerSequence,
         drinkTrackingMode,
       },
@@ -190,22 +203,36 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
       </div>
 
       <div className="input-group">
-        <label className="input-label">Number of Questions</label>
-        <div className="player-count-row">
-          {QUESTION_COUNT_OPTIONS.map((n) => (
-            <button
-              key={n}
-              className={`count-btn tos-count-btn ${questionCount === n ? "active" : ""}`}
-              onClick={() => setQuestionCount(n)}
-            >
-              {n}
-            </button>
-          ))}
+        <div className="tos-setting-header">
+          <label className="input-label" style={{ marginBottom: 0 }}>
+            Number of Questions per Person
+          </label>
+          <div className="tos-total-questions">Total: {totalQuestions}</div>
         </div>
-        {isCapped && (
+        <div className="tos-stepper-row">
+          <button
+            className="tos-stepper-btn"
+            disabled={perPerson <= 1}
+            onClick={() => setPerPerson((p) => Math.max(1, p - 1))}
+          >
+            −
+          </button>
+          <div className="tos-stepper-value">{perPerson}</div>
+          <button
+            className="tos-stepper-btn"
+            disabled={plusDisabled}
+            onClick={() => setPerPerson((p) => p + 1)}
+          >
+            +
+          </button>
+          <button className="tos-option-btn" style={{ flex: "none" }} onClick={() => setPerPerson(maxPerPerson)}>
+            All
+          </button>
+        </div>
+        {autoAdjusted && (
           <div className="tos-cap-notice">
-            Only {maxAvailable} question{maxAvailable === 1 ? "" : "s"} available for this setting —
-            capped to {maxAvailable}.
+            Number of questions exceeded the limit — automatically adjusted to {perPerson} per
+            person ({totalQuestions} total).
           </div>
         )}
       </div>

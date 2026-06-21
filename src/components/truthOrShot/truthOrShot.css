@@ -44,10 +44,48 @@
   letter-spacing: 1px;
 }
 
-.tos-count-btn {
-  width: auto;
+.tos-setting-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tos-total-questions {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--neon-red);
+}
+
+.tos-stepper-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tos-stepper-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tos-stepper-btn:hover:not(:disabled) { border-color: var(--neon-red); color: var(--neon-red); }
+.tos-stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.tos-stepper-value {
   min-width: 48px;
-  padding: 0 12px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 /* Fixed-level tier buttons */
