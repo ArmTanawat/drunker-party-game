@@ -113,6 +113,10 @@ export default function TruthOrShotGame({ players, settings, onExit, onRestart }
     .map(([name, s]) => ({ name, ...s }))
     .sort((a, b) => b.drank - a.drank);
 
+  const biggestLeak = Object.entries(stats)
+    .map(([name, s]) => ({ name, ...s }))
+    .sort((a, b) => b.answered - a.answered)[0];
+
   if (phase === "end") {
     return (
       <>
@@ -162,6 +166,7 @@ export default function TruthOrShotGame({ players, settings, onExit, onRestart }
                   <div className="tos-leaderboard-row" key={p.name}>
                     <span className="tos-leaderboard-name">
                       {i === 0 && p.drank > 0 ? "🏆 " : ""}
+                      {biggestLeak && p.name === biggestLeak.name && biggestLeak.answered > 0 ? "💦 " : ""}
                       {p.name}
                     </span>
                     <span className="tos-leaderboard-stats">
@@ -171,7 +176,12 @@ export default function TruthOrShotGame({ players, settings, onExit, onRestart }
                 ))}
                 {leaderboard[0] && leaderboard[0].drank > 0 && (
                   <div className="tos-biggest-drinker">
-                    🏆 Biggest Drinker: {leaderboard[0].name}
+                    🍺🥴🍾 Biggest Drinker: {leaderboard[0].name}
+                  </div>
+                )}
+                {biggestLeak && biggestLeak.answered > 0 && (
+                  <div className="tos-biggest-leak">
+                    🐬🤐💦 Biggest Leak: {biggestLeak.name}
                   </div>
                 )}
               </div>
