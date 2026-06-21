@@ -22,7 +22,7 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   const [count, setCount] = useState(DEFAULT_COUNT);
   const [names, setNames] = useState(Array(DEFAULT_COUNT).fill(""));
 
-  const [showHint, setShowHint] = useState("show"); // 'show' | 'hide'
+  const [showHint, setShowHint] = useState("hide"); // 'show' | 'hide'
   const [progressionMode, setProgressionMode] = useState("randomize"); // 'randomize' | 'sequential' | 'fixed'
   const [fixedTier, setFixedTier] = useState("easy"); // 'easy' | 'normal' | 'brutal'
   const [questionCount, setQuestionCount] = useState(10);
@@ -124,16 +124,16 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
         <label className="input-label">Difficulty Hint Display</label>
         <div className="tos-option-row">
           <button
-            className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
-            onClick={() => setShowHint("show")}
-          >
-            👁 Show Hint
-          </button>
-          <button
             className={`tos-option-btn ${showHint === "hide" ? "active" : ""}`}
             onClick={() => setShowHint("hide")}
           >
             🙈 Hide Hint
+          </button>
+          <button
+            className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
+            onClick={() => setShowHint("show")}
+          >
+            👁 Show Hint
           </button>
         </div>
         <div className="tos-hint-note">Secret-tier questions never show a hint, even in Show Hint mode.</div>
