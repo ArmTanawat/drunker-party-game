@@ -15,7 +15,7 @@ export default function HomeScreen({ onSelectGame }) {
       id: "truthOrShot",
       emoji: "🥃",
       title: "TRUTH OR SHOT",
-      desc: "Answer the truth or take the shot. No escape, no mercy. Coming soon...",
+      desc: "Answer the truth or take the shot. No escape, no mercy.",
       tag: "2–10 Players",
       accent: "var(--neon-red)",
       available: true,
