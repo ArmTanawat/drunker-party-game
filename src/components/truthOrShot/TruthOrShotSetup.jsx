@@ -29,6 +29,7 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   const [autoAdjusted, setAutoAdjusted] = useState(false);
   const [playerSequence, setPlayerSequence] = useState("sequential"); // 'sequential' | 'randomize'
   const [drinkTrackingMode, setDrinkTrackingMode] = useState("track"); // 'honor' | 'track'
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleCountChange = (n) => {
     setCount(n);
@@ -165,7 +166,10 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
           <button
             className="tos-stepper-btn"
             disabled={perPerson <= 1}
-            onClick={() => setPerPerson((p) => Math.max(1, p - 1))}
+            onClick={() => {
+              setPerPerson((p) => Math.max(1, p - 1));
+              setAutoAdjusted(false);
+            }}
           >
             −
           </button>
@@ -173,11 +177,21 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
           <button
             className="tos-stepper-btn"
             disabled={plusDisabled}
-            onClick={() => setPerPerson((p) => p + 1)}
+            onClick={() => {
+              setPerPerson((p) => p + 1);
+              setAutoAdjusted(false);
+            }}
           >
             +
           </button>
-          <button className="tos-option-btn" style={{ flex: "none" }} onClick={() => setPerPerson(maxPerPerson)}>
+          <button
+            className="tos-option-btn"
+            style={{ flex: "none" }}
+            onClick={() => {
+              setPerPerson(maxPerPerson);
+              setAutoAdjusted(false);
+            }}
+          >
             All
           </button>
           <div className="tos-player-display">
@@ -216,67 +230,80 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
         </div>
       </div>
 
-      <div className="input-group">
-        <label className="input-label">Difficulty Hint Display</label>
-        <div className="tos-option-row">
-          <button
-            className={`tos-option-btn ${showHint === "hide" ? "active" : ""}`}
-            onClick={() => setShowHint("hide")}
-          >
-            🙈 Hide Hint
-          </button>
-          <button
-            className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
-            onClick={() => setShowHint("show")}
-          >
-            👁 Show Hint
-          </button>
-        </div>
-        <div className="tos-hint-note">Secret-tier questions never show a hint, even in Show Hint mode.</div>
+      <div
+        className="reveal-toggle-bar"
+        style={{ marginBottom: 20 }}
+        onClick={() => setShowAdvanced((s) => !s)}
+      >
+        <span>{showAdvanced ? "🔓 Hide Advanced Settings" : "🔒 Advanced Settings"}</span>
+        <span className="toggle-arrow">{showAdvanced ? "▲" : "▼"}</span>
       </div>
 
-      <div className="input-group">
-        <label className="input-label">Player Sequence</label>
-        <div className="tos-option-row">
-          <button
-            className={`tos-option-btn ${playerSequence === "sequential" ? "active" : ""}`}
-            onClick={() => setPlayerSequence("sequential")}
-          >
-            ➡️ Sequential
-          </button>
-          <button
-            className={`tos-option-btn ${playerSequence === "randomize" ? "active" : ""}`}
-            onClick={() => setPlayerSequence("randomize")}
-          >
-            🔀 Randomize
-          </button>
-        </div>
-        <div className="tos-hint-note">
-          The player sequence will be{" "}
-          {playerSequence === "sequential" ? "the order you entered names in" : "shuffled randomly each game"}.
-        </div>
-      </div>
+      {showAdvanced && (
+        <>
+          <div className="input-group">
+            <label className="input-label">Difficulty Hint Display</label>
+            <div className="tos-option-row">
+              <button
+                className={`tos-option-btn ${showHint === "hide" ? "active" : ""}`}
+                onClick={() => setShowHint("hide")}
+              >
+                🙈 Hide Hint
+              </button>
+              <button
+                className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
+                onClick={() => setShowHint("show")}
+              >
+                👁 Show Hint
+              </button>
+            </div>
+            <div className="tos-hint-note">Secret-tier questions never show a hint, even in Show Hint mode.</div>
+          </div>
 
-      <div className="input-group">
-        <label className="input-label">Drink Tracking Mode</label>
-        <div className="tos-option-row">
-          <button
-            className={`tos-option-btn ${drinkTrackingMode === "track" ? "active" : ""}`}
-            onClick={() => setDrinkTrackingMode("track")}
-          >
-            📊 Track Mode
-          </button>
-          <button
-            className={`tos-option-btn ${drinkTrackingMode === "honor" ? "active" : ""}`}
-            onClick={() => setDrinkTrackingMode("honor")}
-          >
-            🤝 Honor System
-          </button>
-        </div>
-        <div className="tos-hint-note">
-          Honor System won't count drinks; Track Mode logs each player's count for the leaderboard.
-        </div>
-      </div>
+          <div className="input-group">
+            <label className="input-label">Player Sequence</label>
+            <div className="tos-option-row">
+              <button
+                className={`tos-option-btn ${playerSequence === "sequential" ? "active" : ""}`}
+                onClick={() => setPlayerSequence("sequential")}
+              >
+                ➡️ Sequential
+              </button>
+              <button
+                className={`tos-option-btn ${playerSequence === "randomize" ? "active" : ""}`}
+                onClick={() => setPlayerSequence("randomize")}
+              >
+                🔀 Randomize
+              </button>
+            </div>
+            <div className="tos-hint-note">
+              The player sequence will be{" "}
+              {playerSequence === "sequential" ? "the order you entered names in" : "shuffled randomly each game"}.
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Drink Tracking Mode</label>
+            <div className="tos-option-row">
+              <button
+                className={`tos-option-btn ${drinkTrackingMode === "track" ? "active" : ""}`}
+                onClick={() => setDrinkTrackingMode("track")}
+              >
+                📊 Track Mode
+              </button>
+              <button
+                className={`tos-option-btn ${drinkTrackingMode === "honor" ? "active" : ""}`}
+                onClick={() => setDrinkTrackingMode("honor")}
+              >
+                🤝 Honor System
+              </button>
+            </div>
+            <div className="tos-hint-note">
+              Honor System won't count drinks; Track Mode logs each player's count for the leaderboard.
+            </div>
+          </div>
+        </>
+      )}
 
       <button className="btn-primary btn-red" disabled={!canStart} onClick={handleSubmit}>
         🎮 Start Game
