@@ -44,6 +44,7 @@ export default function App() {
           key={gameKey}
           players={gameConfig.players}
           spyCount={gameConfig.spyCount}
+          categories={gameConfig.categories}
           onExit={handleExit}
           onRestart={handleRestart}
         />

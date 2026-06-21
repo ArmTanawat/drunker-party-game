@@ -4,8 +4,9 @@ import { shuffle } from "../../utils/shuffle";
 import ConfirmModal from "../shared/ConfirmModal";
 import "./wordImposter.css";
 
-function assignRoles(players, spyCount) {
-  const wordPair = WORD_PAIRS[Math.floor(Math.random() * WORD_PAIRS.length)];
+function assignRoles(players, spyCount, categories) {
+  const pool = WORD_PAIRS.filter((p) => categories.includes(p.spy));
+  const wordPair = pool[Math.floor(Math.random() * pool.length)];
 
   // 1. Pick spy indices randomly
   const spyIndices = new Set(
@@ -23,8 +24,8 @@ function assignRoles(players, spyCount) {
   return shuffle(roles);
 }
 
-export default function WordImposterGame({ players, spyCount, onExit, onRestart }) {
-  const [roles] = useState(() => assignRoles(players, spyCount));
+export default function WordImposterGame({ players, spyCount, categories, onExit, onRestart }) {
+  const [roles] = useState(() => assignRoles(players, spyCount, categories));
   const [phase, setPhase] = useState("reveal"); // 'reveal' | 'end'
   const [currentIdx, setCurrentIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);

@@ -2,6 +2,36 @@
    Other games should NOT use these class names — give new games their own
    equivalents (e.g. .question-value instead of .word-value) to avoid collisions. */
 
+/* Setup screen — category selection (multi-select) buttons */
+.category-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.category-btn.active {
+  border-color: var(--neon-blue);
+  background: rgba(0,212,255,0.12);
+  color: var(--neon-blue);
+  box-shadow: 0 0 12px rgba(0,212,255,0.25);
+}
+.category-btn:hover:not(.active) { border-color: rgba(255,255,255,0.2); }
+
+.wi-hint-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
 .word-hidden {
   background: rgba(0,0,0,0.5);
   border: 1px dashed rgba(255,255,255,0.1);

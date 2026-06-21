@@ -5,10 +5,14 @@ const MIN_PLAYERS = 3;
 const MAX_PLAYERS = 12;
 const DEFAULT_COUNT = 5;
 
+const CATEGORIES = ["Location", "Object"];
+
 export default function WordImposterSetup({ onStart, onBack }) {
   const [count, setCount] = useState(DEFAULT_COUNT);
   const [names, setNames] = useState(Array(DEFAULT_COUNT).fill(""));
   const [spyCount, setSpyCount] = useState(1);
+  const [categories, setCategories] = useState([...CATEGORIES]);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Max spies = floor(players/2), capped at 3
   const maxSpies = Math.min(Math.floor(count / 2), 3);
@@ -34,7 +38,15 @@ export default function WordImposterSetup({ onStart, onBack }) {
     });
   };
 
+  const toggleCategory = (cat) => {
+    setCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
+  };
+
   const allFilled = names.every((n) => n.trim().length > 0);
+  const hasCategory = categories.length > 0;
+  const canStart = allFilled && hasCategory;
 
   const countsAvail = [];
   for (let i = MIN_PLAYERS; i <= MAX_PLAYERS; i++) countsAvail.push(i);
@@ -105,15 +117,44 @@ export default function WordImposterSetup({ onStart, onBack }) {
         </div>
       </div>
 
+      <div
+        className="reveal-toggle-bar"
+        style={{ marginBottom: 20 }}
+        onClick={() => setShowAdvanced((s) => !s)}
+      >
+        <span>{showAdvanced ? "🔓 Hide Advanced Settings" : "🔒 Advanced Settings"}</span>
+        <span className="toggle-arrow">{showAdvanced ? "▲" : "▼"}</span>
+      </div>
+
+      {showAdvanced && (
+        <div className="input-group">
+          <label className="input-label">Category Selection</label>
+          <div className="player-count-row">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                className={`category-btn ${categories.includes(cat) ? "active" : ""}`}
+                onClick={() => toggleCategory(cat)}
+              >
+                {cat === "Location" ? "📍 Location" : "📦 Object"}
+              </button>
+            ))}
+          </div>
+          {!hasCategory && (
+            <div className="wi-hint-note">Select at least one category to continue.</div>
+          )}
+        </div>
+      )}
+
       <button
         className="btn-primary btn-blue"
-        disabled={!allFilled}
-        onClick={() => onStart({ players: names.map((n) => n.trim()), spyCount })}
+        disabled={!canStart}
+        onClick={() => onStart({ players: names.map((n) => n.trim()), spyCount, categories })}
       >
         🎮 Start Game
       </button>
 
-      {!allFilled && (
+      {!canStart && (
         <div
           style={{
             textAlign: "center",
@@ -123,7 +164,9 @@ export default function WordImposterSetup({ onStart, onBack }) {
             marginTop: 10,
           }}
         >
-          Fill in all player names to continue
+          {!allFilled
+            ? "Fill in all player names to continue"
+            : "Select at least one category to continue"}
         </div>
       )}
     </div>
