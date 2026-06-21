@@ -203,12 +203,7 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
       </div>
 
       <div className="input-group">
-        <div className="tos-setting-header">
-          <label className="input-label" style={{ marginBottom: 0 }}>
-            Number of Questions per Person
-          </label>
-          <div className="tos-total-questions">Total: {totalQuestions}</div>
-        </div>
+        <label className="input-label">Number of Questions per Person</label>
         <div className="tos-stepper-row">
           <button
             className="tos-stepper-btn"
@@ -228,6 +223,9 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
           <button className="tos-option-btn" style={{ flex: "none" }} onClick={() => setPerPerson(maxPerPerson)}>
             All
           </button>
+          <div className="tos-player-display">
+            Total Questions: {totalQuestions} | Total Players: {count}
+          </div>
         </div>
         {autoAdjusted && (
           <div className="tos-cap-notice">
