@@ -1,0 +1,74 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cute smiling beer mug">
+  <defs>
+    <linearGradient id="beer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFDD68"/>
+      <stop offset="0.5" stop-color="#FBC52B"/>
+      <stop offset="1" stop-color="#F6AD12"/>
+    </linearGradient>
+    <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FCC32B"/>
+      <stop offset="1" stop-color="#F6AA10"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="rotate(-4 250 290)" stroke="#3E2C12" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- Handle (behind body) -->
+    <path d="M 350 248
+             C 410 240 441 282 433 313
+             C 427 353 400 384 350 376
+             L 350 351
+             C 393 358 409 335 409 308
+             C 409 280 391 266 350 270 Z"
+          fill="url(#handle)" stroke-width="12"/>
+
+    <!-- Glass body filled with beer -->
+    <path d="M 180 198 L 322 198 Q 352 198 352 228 L 352 392 Q 352 422 322 422
+             L 180 422 Q 150 422 150 392 L 150 228 Q 150 198 180 198 Z"
+          fill="url(#beer)" stroke-width="12"/>
+
+    <!-- Left soft highlight on the beer -->
+    <path d="M 176 250 Q 168 340 184 412 L 198 412 Q 184 340 192 250 Z"
+          fill="#FFFFFF" stroke="none" opacity="0.20"/>
+
+    <!-- tiny rising bubbles in the beer -->
+    <g fill="none" stroke="#FBE08A" stroke-width="3">
+      <circle cx="272" cy="252" r="5.5"/>
+      <circle cx="287" cy="263" r="4"/>
+      <circle cx="260" cy="266" r="3.5"/>
+      <circle cx="279" cy="240" r="3"/>
+    </g>
+
+    <!-- Foam cloud -->
+    <path d="M 146 226
+             C 132 196 136 162 160 150
+             C 150 120 188 110 208 130
+             C 216 104 252 100 268 122
+             C 286 104 322 110 328 138
+             C 356 130 376 156 364 184
+             C 380 195 379 220 356 226
+             C 344 238 324 230 310 234
+             C 294 242 276 230 260 234
+             C 242 240 224 230 208 234
+             C 190 240 166 238 146 226 Z"
+          fill="#FFFFFF" stroke-width="12"/>
+
+    <!-- foam bubble holes -->
+    <g fill="none" stroke="#E5D5B0" stroke-width="3.5">
+      <circle cx="200" cy="160" r="6"/>
+      <circle cx="236" cy="146" r="7"/>
+      <circle cx="272" cy="160" r="5.5"/>
+      <circle cx="296" cy="181" r="6"/>
+      <circle cx="220" cy="189" r="5"/>
+      <circle cx="258" cy="183" r="4.5"/>
+    </g>
+
+    <!-- Face: eyes -->
+    <circle cx="211.5" cy="300.5" r="8.5" fill="#2E2212" stroke="none"/>
+    <circle cx="289.5" cy="300.5" r="8.5" fill="#2E2212" stroke="none"/>
+
+    <!-- Face: smile -->
+    <path d="M 230 322 Q 251 340 272 322" fill="none" stroke="#2E2212" stroke-width="8"/>
+
+  </g>
+</svg>
