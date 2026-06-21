@@ -1,0 +1,135 @@
+/* Everything in this file is unique to Word Imposter's vocabulary.
+   Other games should NOT use these class names — give new games their own
+   equivalents (e.g. .question-value instead of .word-value) to avoid collisions. */
+
+.word-hidden {
+  background: rgba(0,0,0,0.5);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 28px 20px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.word-revealed-wrap {
+  margin-bottom: 28px;
+}
+.word-label {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.word-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 9vw, 48px);
+  font-weight: 900;
+  animation: wordPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.word-value.spy { color: var(--neon-red); text-shadow: 0 0 20px var(--neon-red), 0 0 40px rgba(255,26,75,0.4); }
+.word-value.normal { color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green), 0 0 40px rgba(57,255,20,0.4); }
+.word-value.spy-label {
+  font-size: 13px;
+  letter-spacing: 3px;
+  margin-top: 6px;
+  color: var(--neon-red);
+  opacity: 0.8;
+}
+
+@keyframes wordPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* End-screen role list */
+.role-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.role-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 16px;
+}
+.role-name { font-size: 16px; font-weight: 600; }
+.role-badge {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.role-badge.spy {
+  background: rgba(255,26,75,0.15);
+  border: 1px solid var(--neon-red);
+  color: var(--neon-red);
+}
+.role-badge.crewmate {
+  background: rgba(57,255,20,0.1);
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+}
+
+/* Spy-only hint + teammate reveal */
+.spy-hint {
+  font-size: 12px;
+  color: var(--neon-red);
+  opacity: 0.8;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+.spy-team-box {
+  margin-top: 14px;
+  background: rgba(255,26,75,0.08);
+  border: 1px solid rgba(255,26,75,0.35);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.spy-team-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--neon-red);
+  margin-bottom: 8px;
+}
+.spy-team-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 8px var(--neon-yellow);
+  padding: 3px 0;
+}
+
+/* End-screen "reveal word info" box (uses shared .reveal-toggle-bar + slideDown) */
+.word-info-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 4px 0;
+  margin-top: 12px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+.word-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+}
+.word-info-label {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.word-info-divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 0 18px;
+}
