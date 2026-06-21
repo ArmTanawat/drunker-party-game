@@ -160,49 +160,6 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
       </div>
 
       <div className="input-group">
-        <label className="input-label">Difficulty Hint Display</label>
-        <div className="tos-option-row">
-          <button
-            className={`tos-option-btn ${showHint === "hide" ? "active" : ""}`}
-            onClick={() => setShowHint("hide")}
-          >
-            🙈 Hide Hint
-          </button>
-          <button
-            className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
-            onClick={() => setShowHint("show")}
-          >
-            👁 Show Hint
-          </button>
-        </div>
-        <div className="tos-hint-note">Secret-tier questions never show a hint, even in Show Hint mode.</div>
-      </div>
-
-      <div className="input-group">
-        <label className="input-label">Question Progression Mode</label>
-        <div className="tos-option-row">
-          <button
-            className={`tos-option-btn ${progressionMode === "randomize" ? "active" : ""}`}
-            onClick={() => setProgressionMode("randomize")}
-          >
-            🎲 Randomize
-          </button>
-          <button
-            className={`tos-option-btn ${progressionMode === "sequential" ? "active" : ""}`}
-            onClick={() => setProgressionMode("sequential")}
-          >
-            📈 Easy to Brutal
-          </button>
-        </div>
-
-        {progressionMode === "sequential" && (
-          <div className="tos-hint-note">
-            Order follows your selected difficulties, low to high, then Secret as the final stretch.
-          </div>
-        )}
-      </div>
-
-      <div className="input-group">
         <label className="input-label">Number of Questions per Person</label>
         <div className="tos-stepper-row">
           <button
@@ -233,6 +190,49 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
             person ({totalQuestions} total).
           </div>
         )}
+      </div>
+
+      <div className="input-group">
+        <label className="input-label">Question Progression Mode</label>
+        <div className="tos-option-row">
+          <button
+            className={`tos-option-btn ${progressionMode === "randomize" ? "active" : ""}`}
+            onClick={() => setProgressionMode("randomize")}
+          >
+            🎲 Randomize
+          </button>
+          <button
+            className={`tos-option-btn ${progressionMode === "sequential" ? "active" : ""}`}
+            onClick={() => setProgressionMode("sequential")}
+          >
+            📈 Easy to Brutal
+          </button>
+        </div>
+
+        {progressionMode === "sequential" && (
+          <div className="tos-hint-note">
+            Order follows your selected difficulties, low to high, then Secret as the final stretch.
+          </div>
+        )}
+      </div>
+
+      <div className="input-group">
+        <label className="input-label">Difficulty Hint Display</label>
+        <div className="tos-option-row">
+          <button
+            className={`tos-option-btn ${showHint === "hide" ? "active" : ""}`}
+            onClick={() => setShowHint("hide")}
+          >
+            🙈 Hide Hint
+          </button>
+          <button
+            className={`tos-option-btn ${showHint === "show" ? "active" : ""}`}
+            onClick={() => setShowHint("show")}
+          >
+            👁 Show Hint
+          </button>
+        </div>
+        <div className="tos-hint-note">Secret-tier questions never show a hint, even in Show Hint mode.</div>
       </div>
 
       <div className="input-group">
