@@ -10,20 +10,58 @@ const TIER_BADGE = {
   brutal: "🔴 Brutal",
 };
 
+// Splits `total` across `tiers` (ordered easy → normal → brutal, only the selected ones).
+// 1 tier: takes it all. 2 tiers: even split, remainder to the harder tier.
+// 3 tiers: even split, remainder of 1 to brutal, remainder of 2 to normal + brutal.
+function splitQuota(total, tiers) {
+  if (tiers.length === 0) return {};
+  if (tiers.length === 1) return { [tiers[0]]: total };
+
+  const base = Math.floor(total / tiers.length);
+  const remainder = total % tiers.length;
+  const quotas = {};
+  tiers.forEach((t) => {
+    quotas[t] = base;
+  });
+
+  if (tiers.length === 2) {
+    quotas[tiers[1]] += remainder; // 0 or 1, goes to the harder of the two
+  } else if (tiers.length === 3) {
+    if (remainder === 1) quotas[tiers[2]] += 1; // brutal
+    else if (remainder === 2) {
+      quotas[tiers[1]] += 1; // normal
+      quotas[tiers[2]] += 1; // brutal
+    }
+  }
+  return quotas;
+}
+
 function buildQueue(settings) {
   const { progressionMode, difficulties, questionCount } = settings;
   const orderedTiers = ["easy", "normal", "brutal"].filter((t) => difficulties.includes(t));
 
-  let ordered;
   if (progressionMode === "sequential") {
-    ordered = [...orderedTiers, "secret"].flatMap((tier) =>
-      shuffle(QUESTIONS.filter((q) => q.tier === tier))
+    const mainCapacity = orderedTiers.reduce(
+      (sum, t) => sum + QUESTIONS.filter((q) => q.tier === t).length,
+      0
     );
-  } else {
-    ordered = shuffle(QUESTIONS.filter((q) => orderedTiers.includes(q.tier)));
+    const mainTotal = Math.min(questionCount, mainCapacity);
+    const quotas = splitQuota(mainTotal, orderedTiers);
+
+    const mainBlocks = orderedTiers.flatMap((tier) =>
+      shuffle(QUESTIONS.filter((q) => q.tier === tier)).slice(0, quotas[tier] || 0)
+    );
+
+    const secretNeeded = questionCount - mainTotal;
+    const secretBlock =
+      secretNeeded > 0
+        ? shuffle(QUESTIONS.filter((q) => q.tier === "secret")).slice(0, secretNeeded)
+        : [];
+
+    return [...mainBlocks, ...secretBlock];
   }
 
-  return ordered.slice(0, questionCount);
+  return shuffle(QUESTIONS.filter((q) => orderedTiers.includes(q.tier))).slice(0, questionCount);
 }
 
 function buildPlayerOrder(players, playerSequence) {
