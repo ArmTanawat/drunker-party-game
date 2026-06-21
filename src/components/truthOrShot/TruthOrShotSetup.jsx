@@ -7,14 +7,14 @@ const MAX_PLAYERS = 10;
 const DEFAULT_COUNT = 5;
 const QUESTION_COUNT_OPTIONS = [5, 10, 15, 20, 25, 30, 40, 50, "All"];
 
-function tiersForProgression(progressionMode, fixedTier) {
-  if (progressionMode === "sequential") return ["easy", "normal", "brutal", "secret"];
-  if (progressionMode === "fixed") return [fixedTier];
-  return ["easy", "normal", "brutal"];
+function tiersForProgression(progressionMode, difficulties) {
+  const ordered = ["easy", "normal", "brutal"].filter((t) => difficulties.includes(t));
+  if (progressionMode === "sequential") return [...ordered, "secret"];
+  return ordered;
 }
 
-function availableCount(progressionMode, fixedTier) {
-  const tiers = tiersForProgression(progressionMode, fixedTier);
+function availableCount(progressionMode, difficulties) {
+  const tiers = tiersForProgression(progressionMode, difficulties);
   return QUESTIONS.filter((q) => tiers.includes(q.tier)).length;
 }
 
@@ -22,9 +22,9 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
   const [count, setCount] = useState(DEFAULT_COUNT);
   const [names, setNames] = useState(Array(DEFAULT_COUNT).fill(""));
 
+  const [difficulties, setDifficulties] = useState(["easy"]); // subset of 'easy' | 'normal' | 'brutal'
   const [showHint, setShowHint] = useState("hide"); // 'show' | 'hide'
-  const [progressionMode, setProgressionMode] = useState("randomize"); // 'randomize' | 'sequential' | 'fixed'
-  const [fixedTier, setFixedTier] = useState("easy"); // 'easy' | 'normal' | 'brutal'
+  const [progressionMode, setProgressionMode] = useState("randomize"); // 'randomize' | 'sequential'
   const [questionCount, setQuestionCount] = useState(10);
   const [playerSequence, setPlayerSequence] = useState("sequential"); // 'sequential' | 'randomize'
   const [drinkTrackingMode, setDrinkTrackingMode] = useState("honor"); // 'honor' | 'track'
@@ -46,12 +46,20 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
     });
   };
 
+  const toggleDifficulty = (tier) => {
+    setDifficulties((prev) =>
+      prev.includes(tier) ? prev.filter((t) => t !== tier) : [...prev, tier]
+    );
+  };
+
   const allFilled = names.every((n) => n.trim().length > 0);
+  const hasDifficulty = difficulties.length > 0;
+  const canStart = allFilled && hasDifficulty;
 
   const countsAvail = [];
   for (let i = MIN_PLAYERS; i <= MAX_PLAYERS; i++) countsAvail.push(i);
 
-  const maxAvailable = availableCount(progressionMode, fixedTier);
+  const maxAvailable = availableCount(progressionMode, difficulties);
   const requestedCount = questionCount === "All" ? maxAvailable : questionCount;
   const cappedCount = Math.min(requestedCount, maxAvailable);
   const isCapped = requestedCount > maxAvailable;
@@ -60,9 +68,9 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
     onStart({
       players: names.map((n) => n.trim()),
       settings: {
+        difficulties,
         showHint: showHint === "show",
         progressionMode,
-        fixedTier: progressionMode === "fixed" ? fixedTier : null,
         questionCount: cappedCount,
         playerSequence,
         drinkTrackingMode,
@@ -121,6 +129,24 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
       <div className="section-title">— Game Settings —</div>
 
       <div className="input-group">
+        <label className="input-label">Difficulty Selection</label>
+        <div className="tos-option-row">
+          {["easy", "normal", "brutal"].map((tier) => (
+            <button
+              key={tier}
+              className={`tos-tier-btn ${tier} ${difficulties.includes(tier) ? "active" : ""}`}
+              onClick={() => toggleDifficulty(tier)}
+            >
+              {tier === "easy" ? "🟢 Easy" : tier === "normal" ? "🟡 Normal" : "🔴 Brutal"}
+            </button>
+          ))}
+        </div>
+        {!hasDifficulty && (
+          <div className="tos-hint-note">Select at least one difficulty to continue.</div>
+        )}
+      </div>
+
+      <div className="input-group">
         <label className="input-label">Difficulty Hint Display</label>
         <div className="tos-option-row">
           <button
@@ -152,33 +178,13 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
             className={`tos-option-btn ${progressionMode === "sequential" ? "active" : ""}`}
             onClick={() => setProgressionMode("sequential")}
           >
-            📈 Sequential Escalation
-          </button>
-          <button
-            className={`tos-option-btn ${progressionMode === "fixed" ? "active" : ""}`}
-            onClick={() => setProgressionMode("fixed")}
-          >
-            📌 Fixed Level
+            📈 Easy to Brutal
           </button>
         </div>
 
-        {progressionMode === "fixed" && (
-          <div className="tos-option-row" style={{ marginTop: 10 }}>
-            {["easy", "normal", "brutal"].map((tier) => (
-              <button
-                key={tier}
-                className={`tos-tier-btn ${tier} ${fixedTier === tier ? "active" : ""}`}
-                onClick={() => setFixedTier(tier)}
-              >
-                {tier === "easy" ? "🟢 Easy" : tier === "normal" ? "🟡 Normal" : "🔴 Brutal"}
-              </button>
-            ))}
-          </div>
-        )}
-
         {progressionMode === "sequential" && (
           <div className="tos-hint-note">
-            Order: Easy → Normal → Brutal → Secret. Secret questions only appear in this mode.
+            Order follows your selected difficulties, low to high, then Secret as the final stretch.
           </div>
         )}
       </div>
@@ -240,11 +246,11 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
         </div>
       </div>
 
-      <button className="btn-primary btn-red" disabled={!allFilled} onClick={handleSubmit}>
+      <button className="btn-primary btn-red" disabled={!canStart} onClick={handleSubmit}>
         🎮 Start Game
       </button>
 
-      {!allFilled && (
+      {!canStart && (
         <div
           style={{
             textAlign: "center",
@@ -254,7 +260,9 @@ export default function TruthOrShotSetup({ onStart, onBack }) {
             marginTop: 10,
           }}
         >
-          Fill in all player names to continue
+          {!allFilled
+            ? "Fill in all player names to continue"
+            : "Select at least one difficulty to continue"}
         </div>
       )}
     </div>

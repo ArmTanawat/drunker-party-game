@@ -11,17 +11,16 @@ const TIER_BADGE = {
 };
 
 function buildQueue(settings) {
-  const { progressionMode, fixedTier, questionCount } = settings;
+  const { progressionMode, difficulties, questionCount } = settings;
+  const orderedTiers = ["easy", "normal", "brutal"].filter((t) => difficulties.includes(t));
 
   let ordered;
   if (progressionMode === "sequential") {
-    ordered = ["easy", "normal", "brutal", "secret"].flatMap((tier) =>
+    ordered = [...orderedTiers, "secret"].flatMap((tier) =>
       shuffle(QUESTIONS.filter((q) => q.tier === tier))
     );
-  } else if (progressionMode === "fixed") {
-    ordered = shuffle(QUESTIONS.filter((q) => q.tier === fixedTier));
   } else {
-    ordered = shuffle(QUESTIONS.filter((q) => q.tier !== "secret"));
+    ordered = shuffle(QUESTIONS.filter((q) => orderedTiers.includes(q.tier)));
   }
 
   return ordered.slice(0, questionCount);
